@@ -32,6 +32,14 @@ class Recogn(Resource):
 			raise BadRequest("Given file is invalid!")
 	
 	
+	if len(encodings) > 0:
+        query = "INSERT INTO vectors (file, vec_low, vec_high) VALUES ('{}', CUBE(array[{}]), CUBE(array[{}]))".format(
+            file_name,
+            ','.join(str(s) for s in encodings[0][0:64]),
+            ','.join(str(s) for s in encodings[0][64:128]),
+        )
+	db.execute(query)
+	
 	#~ def __init__(self):
 		#~ self.reqparse = reqparse.RequestParser()
 		#~ self.reqparse.add_argument('name', dest= 'name',
