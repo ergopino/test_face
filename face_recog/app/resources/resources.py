@@ -1,5 +1,5 @@
 import datetime
-from app import app
+from app import app,db
 from flask import abort
 from flask_restful import Resource, reqparse, marshal, fields
 import pandas as pd
@@ -31,14 +31,25 @@ class Recogn(Resource):
 		else:
 			raise BadRequest("Given file is invalid!")
 	
-	
-	if len(encodings) > 0:
-        query = "INSERT INTO vectors (file, vec_low, vec_high) VALUES ('{}', CUBE(array[{}]), CUBE(array[{}]))".format(
-            file_name,
-            ','.join(str(s) for s in encodings[0][0:64]),
-            ','.join(str(s) for s in encodings[0][64:128]),
-        )
-	db.execute(query)
+		# Load the uploaded image file
+		img = face_recognition.load_image_file(file_stream)
+
+		# Get face encodings for any faces in the uploaded image
+		uploaded_faces = face_recognition.face_encodings(img)
+
+		# Defaults for the result object
+		faces_found = len(uploaded_faces)
+		faces = []
+
+		if faces_found:
+			for face in uploaded_faces:
+				query = "INSERT INTO vectors (file, vec_low, vec_high) VALUES ('{}', CUBE(array[{}])))".format(
+						"lala",
+						','.join(str(s) for s in face[0][0:128]),
+					)
+				db.execute(query)
+		#if len(encodings) > 0:
+			
 	
 	#~ def __init__(self):
 		#~ self.reqparse = reqparse.RequestParser()
