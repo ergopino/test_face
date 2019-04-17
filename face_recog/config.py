@@ -1,2 +1,2 @@
 SECURITY_TRACKABLE = True
-SQLALCHEMY_DATABASE_URI = 'postgresql://chewie:newbie@localhost/testdb'
+PSQL_DATABASE_URI = 'pq://user:***@172.21.0.2/db'

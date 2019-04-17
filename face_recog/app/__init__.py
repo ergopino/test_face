@@ -5,7 +5,9 @@ import postgresql
 app = Flask(__name__)
 app.config.from_object('config')
 #db = SQLAlchemy(app)
-db = postgresql.open('pq://user:pass@localhost:5434/db')
+
+dbURI = app.config['PSQL_DATABASE_URI']
+db = postgresql.open(dbURI)
 
 #from app import api, models
 from app import api
