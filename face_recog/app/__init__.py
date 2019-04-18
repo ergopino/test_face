@@ -11,7 +11,6 @@ try:
 	db = postgresql.open(dbURI)
 except:
 	print("change config data, database not connected")
-	continue
 
 #from app import api, models
 from app import api
