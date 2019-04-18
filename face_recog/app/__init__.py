@@ -6,8 +6,11 @@ app = Flask(__name__)
 app.config.from_object('config')
 #db = SQLAlchemy(app)
 
-dbURI = app.config['PSQL_DATABASE_URI']
-db = postgresql.open(dbURI)
+try:
+	dbURI = app.config['PSQL_DATABASE_URI']
+	db = postgresql.open(dbURI)
+except:
+	continue
 
 #from app import api, models
 from app import api
