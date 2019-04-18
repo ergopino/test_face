@@ -10,6 +10,7 @@ try:
 	dbURI = app.config['PSQL_DATABASE_URI']
 	db = postgresql.open(dbURI)
 except:
+	print("change config data, database not connected")
 	continue
 
 #from app import api, models
