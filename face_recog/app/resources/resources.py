@@ -1,6 +1,6 @@
 import datetime
 from app import app,db
-from flask import abort
+from flask import abort,request
 from flask_restful import Resource, reqparse, marshal, fields
 import pandas as pd
 import face_recognition
@@ -15,39 +15,57 @@ from scipy.spatial.distance import cdist
 
 #@app.route('/NS', methods=['GET'])
 
+# You can change this to any folder on your system
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/')
 def hello_world():
 	return 'Flask Dockerized'
 
 class Recogn(Resource):
+	def get(self):
+		return "lala"
+
+@app.route('/picture', methods=['GET', 'POST'])
+def pic():
 	
-	def post(self):
-		file = extract_image(Resource)
-
-		if file and is_picture(file.filename):
-			# The image file seems valid! Detect faces and return the result.
-			return jsonify(detect_faces_in_image(file))
-		else:
-			raise BadRequest("Given file is invalid!")
+	if request.method == 'GET':
+		return 'Flask Dockerized'
 	
-		# Load the uploaded image file
-		img = face_recognition.load_image_file(file_stream)
+	if request.method == 'POST':
+		if 'file' not in request.files:
+			return redirect(request.url)
 
-		# Get face encodings for any faces in the uploaded image
-		uploaded_faces = face_recognition.face_encodings(img)
+		file_image = request.files['file']
 
-		# Defaults for the result object
-		faces_found = len(uploaded_faces)
-		faces = []
+		if file_image.filename == '':
+			return redirect(request.url)
 
-		if faces_found:
-			for face in uploaded_faces:
-				query = "INSERT INTO vectors (file, vec_low, vec_high) VALUES ('{}', CUBE(array[{}])))".format(
-						"lala",
-						','.join(str(s) for s in face[0][0:128]),
-					)
-				db.execute(query)
+		if file_image and allowed_file(file_image.filename):
+	
+			# Load the uploaded image file
+			img = face_recognition.load_image_file(file_image)
+
+			# Get face encodings for any faces in the uploaded image
+			uploaded_faces = face_recognition.face_encodings(img)
+
+			# Defaults for the result object
+			faces_found = len(uploaded_faces)
+			faces = []
+
+			if faces_found:
+				for face in uploaded_faces:
+					print (face)
+					#~ query = "INSERT INTO vectors (file, vec_low, vec_high) VALUES ('{}', CUBE(array[{}])))".format(
+							#~ "lala",
+							#~ ','.join(str(s) for s in face[0][0:128]),
+						#~ )
+					#~ db.execute(query)
 		#if len(encodings) > 0:
 			
 	
@@ -67,7 +85,7 @@ class Recogn(Resource):
 		#~ db.session.add(species)
 		#~ db.session.commit()
 		#~ return marshal(species, species_fields), 201
-
+		return "lala"
 
 
 #### ---- AUXILIARY METHODS ---- ###
